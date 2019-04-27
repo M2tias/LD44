@@ -33,13 +33,13 @@ public class PlayerShip : MonoBehaviour
     //~invuln
 
     private float lastFire = 0f;
-    private int HP = 10;
 
     private int dir = 1;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerShipRuntime.HP = 5;
         shaderFlash = Shader.Find("GUI/Text Shader");
         shaderSpritesDefault = Shader.Find("Sprites/Default");
     }
@@ -83,6 +83,11 @@ public class PlayerShip : MonoBehaviour
             fire();
         }
 
+        if (playerShipRuntime.HP > 5)
+        {
+            playerShipRuntime.HP = 5;
+        }
+
         body.velocity = vel;
         spriteRenderer.flipX = dir < 0;
         engineEffects.ForEach(x => x.flipX = dir < 0);
@@ -108,7 +113,7 @@ public class PlayerShip : MonoBehaviour
         {
             flashCount = 0;
             playerShipRuntime.Invulnerable = true;
-            HP = HP - damage;
+            playerShipRuntime.HP = playerShipRuntime.HP - damage;
         }
     }
 

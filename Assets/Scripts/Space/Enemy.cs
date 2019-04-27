@@ -15,6 +15,10 @@ public class Enemy : MonoBehaviour
     private AttackPhase attackPhase = AttackPhase.Attacking;
     [SerializeField]
     private PlayerShipRuntime playerShipRuntime;
+    [SerializeField]
+    private EnemyHPMeter hpMeter;
+    [SerializeField]
+    private GameObject boardSign;
 
     //ShipTactic.Attacking
     private float attackChaseTime = 2.5f;
@@ -36,11 +40,13 @@ public class Enemy : MonoBehaviour
     private float fleeingMoveYCoef = 1.5f;
 
     private int HP = 3;
+    private bool boardable = false;
+    private bool doCollisionDamage = true;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        boardSign.SetActive(false);
     }
 
     // Update is called once per frame
@@ -147,6 +153,10 @@ public class Enemy : MonoBehaviour
                     moveY = 1;
                 }
             }
+            if(HP == 1)
+            {
+                tactic = ShipTactic.Fleeing;
+            }
         }
         else if(tactic == ShipTactic.Fleeing)
         {
@@ -176,8 +186,25 @@ public class Enemy : MonoBehaviour
             moveY = fleeingMoveY;
             shooting = false;
         }
+        else if(tactic == ShipTactic.Broken)
+        {
+            moveX = 0;
+            moveY = 0;
+            boardable = true;
+            body.constraints = RigidbodyConstraints2D.FreezeAll;
+            doCollisionDamage = false;
+            hpMeter.gameObject.SetActive(false);
+            boardSign.SetActive(true);
+        }
+
+        if(HP == 0)
+        {
+            tactic = ShipTactic.Broken;
+        }
 
         body.velocity = new Vector2(velocity.x * Time.deltaTime * dir * moveX, velocity.y * Time.deltaTime * moveY);
+
+        hpMeter.SetHealth(HP);
     }
 
     public int GetDir()
@@ -195,13 +222,24 @@ public class Enemy : MonoBehaviour
         HP -= damage;
     }
 
+    public bool GetBoardable()
+    {
+        return boardable;
+    }
+
+    public bool GetCollisionDamage()
+    {
+        return doCollisionDamage;
+    }
+
 }
 
 public enum ShipTactic
 {
     Attacking,
     PassingThrough,
-    Fleeing
+    Fleeing,
+    Broken
 }
 
 public enum AttackPhase

@@ -12,4 +12,12 @@ public class PlayerShipRuntime : ScriptableObject
     [SerializeField]
     private bool invulnerable;
     public bool Invulnerable { get { return invulnerable; } set { invulnerable = value; } }
+
+    [SerializeField]
+    private int gold;
+    public int Gold { get { return gold; } set { gold = value; } }
+
+    [SerializeField]
+    private int hp;
+    public int HP { get { return hp; } set { hp = value; } }
 }
