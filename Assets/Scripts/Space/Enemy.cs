@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
     private EnemyHPMeter hpMeter;
     [SerializeField]
     private GameObject boardSign;
+    [SerializeField]
+    private DockingManager dockingManager;
 
     //ShipTactic.Attacking
     private float attackChaseTime = 2.5f;
@@ -195,6 +197,7 @@ public class Enemy : MonoBehaviour
             doCollisionDamage = false;
             hpMeter.gameObject.SetActive(false);
             boardSign.SetActive(true);
+            dockingManager.SetDockable(this);
         }
 
         if(HP == 0)
@@ -230,6 +233,11 @@ public class Enemy : MonoBehaviour
     public bool GetCollisionDamage()
     {
         return doCollisionDamage;
+    }
+
+    public Vector3 GetDockingPosition()
+    {
+        return boardSign.transform.position;
     }
 
 }

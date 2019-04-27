@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 6128299156075563123, guid: 14f5505cf6547314f9a93b1ed728521c,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -98,9 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f300a864216ae6b40907135071e85adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
   body: {fileID: 2981383729804598437}
   spriteRenderer: {fileID: 2981383729804598440}
-  velocity: {x: 200, y: 150}
+  velocity: {x: 250, y: 150}
   ammoPrefab: {fileID: 2083126444336079932, guid: ccdedbdad211e0b4485636088c666acf,
     type: 3}
   engineEffects:

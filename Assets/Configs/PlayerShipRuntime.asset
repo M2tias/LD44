@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e77e5b5f9051a1b49b159f403b623a31, type: 3}
   m_Name: PlayerShipRuntime
   m_EditorClassIdentifier: 
-  position: {x: -2, y: -1.2}
-  invulnerable: 0
-  gold: 5
-  hp: 4
+  position: {x: -2.254017, y: -2.5750444}
+  invulnerable: 1
+  gold: 0
+  hp: 5

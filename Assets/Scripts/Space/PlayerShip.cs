@@ -9,6 +9,8 @@ public class PlayerShip : MonoBehaviour
     [SerializeField]
     private Rigidbody2D body;
     [SerializeField]
+    private Collider2D shipCollider;
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
     [SerializeField]
     private Vector2 velocity;
@@ -20,6 +22,16 @@ public class PlayerShip : MonoBehaviour
     private float fireWait = 0.33f;
     [SerializeField]
     private PlayerShipRuntime playerShipRuntime;
+    [SerializeField]
+    private DockingManager dockingManager;
+    [SerializeField]
+    private Animator shipAnimator;
+    private bool dockingOngoing = false;
+    private Vector3 dockingPosition;
+    private Vector3 dockingStart;
+    private float dockingStartTime = 0f;
+    private float dockingTime = 0f;
+    private float dockingDistance = 0f;
 
     //invuln
     private float invul_started = 0f;
@@ -82,18 +94,62 @@ public class PlayerShip : MonoBehaviour
         {
             fire();
         }
+        else if(Input.GetKey(KeyCode.J) && !dockingOngoing)
+        {
+            Enemy closest = null;
+            float minD = 100000f;
+            foreach(Enemy dockable in dockingManager.GetDockableEnemies())
+            {
+                float dockableDistance = Vector3.Distance(dockable.transform.position, transform.position);
+                if (dockableDistance < minD)
+                {
+                    minD = dockableDistance;
+                    closest = dockable;
+                }
+            }
+
+            if(closest != null)
+            {
+                dockingPosition = closest.GetDockingPosition();
+                dockingDistance = minD;
+                dockingStartTime = Time.time;
+                dockingTime = dockingDistance / 3;
+                dockingOngoing = true;
+                dockingStart = transform.position;
+            }
+        }
+
+        if(dockingOngoing)
+        { 
+            playerShipRuntime.Invulnerable = true;
+            Debug.DrawLine(dockingPosition, dockingPosition + Vector3.up);
+            Debug.DrawLine(dockingPosition, dockingPosition + Vector3.down);
+            Debug.DrawLine(dockingPosition, dockingPosition + Vector3.right);
+            Debug.DrawLine(dockingPosition, dockingPosition + Vector3.left);
+            shipCollider.enabled = false;
+            float lerpCoef = (Time.time - dockingStartTime) / dockingTime;
+            Vector3 newPos = Vector3.Lerp(dockingStart, dockingPosition, lerpCoef);
+            invul_started = Time.time;
+            transform.position = newPos;
+            if (lerpCoef > 0.98f)
+            {
+                shipAnimator.Play("ShipDock");
+            }
+        }
+        else
+        {
+            body.velocity = vel;
+            spriteRenderer.flipX = dir < 0;
+            engineEffects.ForEach(x => x.flipX = dir < 0);
+            engineEffects.ForEach(x => x.transform.localPosition = new Vector3(-1 * dir * Mathf.Abs(x.transform.localPosition.x), 0, 0));
+            playerShipRuntime.Position = transform.position;
+            mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
+        }
 
         if (playerShipRuntime.HP > 5)
         {
             playerShipRuntime.HP = 5;
         }
-
-        body.velocity = vel;
-        spriteRenderer.flipX = dir < 0;
-        engineEffects.ForEach(x => x.flipX = dir < 0);
-        engineEffects.ForEach(x => x.transform.localPosition = new Vector3(-1 * dir * Mathf.Abs(x.transform.localPosition.x), 0, 0));
-        playerShipRuntime.Position = transform.position;
-        mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
     }
 
     private void fire()

@@ -14,6 +14,8 @@ public class CivilianShip : MonoBehaviour
     private float fireWait = 0.33f;
     [SerializeField]
     private Enemy enemy;
+    [SerializeField]
+    private GameObject boardSign;
 
     private float lastFire = 0f;
 
@@ -28,5 +30,6 @@ public class CivilianShip : MonoBehaviour
     {
         dir = enemy.GetDir();
         transform.localScale = dir > 0 ? new Vector3(1, 1, 1) : new Vector3(-1, 1, 1);
+        boardSign.transform.localScale = dir > 0 ? new Vector3(1, 1, 1) : new Vector3(-1, 1, 1);
     }
 }

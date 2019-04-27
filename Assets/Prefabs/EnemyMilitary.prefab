@@ -104,6 +104,7 @@ MonoBehaviour:
   playerShipRuntime: {fileID: 11400000, guid: 8cad33c0c4c883b46a2a98dba4fc91a5, type: 2}
   hpMeter: {fileID: 3354371454465531540}
   boardSign: {fileID: 792833280447550795}
+  dockingManager: {fileID: 0}
 --- !u!114 &2736538091478949566
 MonoBehaviour:
   m_ObjectHideFlags: 0

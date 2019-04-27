@@ -185,6 +185,7 @@ MonoBehaviour:
   playerShipRuntime: {fileID: 11400000, guid: 8cad33c0c4c883b46a2a98dba4fc91a5, type: 2}
   hpMeter: {fileID: 8532154161277477468}
   boardSign: {fileID: 4522727051135635286}
+  dockingManager: {fileID: 0}
 --- !u!114 &7026297056120067727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,6 +203,7 @@ MonoBehaviour:
   ammoPrefab: {fileID: 0}
   fireWait: 0.33
   enemy: {fileID: 7026297056120067724}
+  boardSign: {fileID: 4522727051135635286}
 --- !u!1 &7026297056237298025
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,11 +462,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BoardSign
-      objectReference: {fileID: 0}
-    - target: {fileID: 8120849010087697925, guid: 202f7d819a7d71947955cae8bcea72ad,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8120849010087697922, guid: 202f7d819a7d71947955cae8bcea72ad,
         type: 3}
