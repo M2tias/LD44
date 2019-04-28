@@ -21,6 +21,8 @@ public class Enemy : MonoBehaviour
     private GameObject boardSign;
     [SerializeField]
     private DockingManager dockingManager;
+    [SerializeField]
+    private EnemyType type;
 
     //ShipTactic.Attacking
     private float attackChaseTime = 2.5f;
@@ -240,6 +242,15 @@ public class Enemy : MonoBehaviour
         return boardSign.transform.position;
     }
 
+    public void SetDockingManager(DockingManager manager)
+    {
+        dockingManager = manager;
+    }
+
+    public EnemyType GetEnemyType()
+    {
+        return type;
+    }
 }
 
 public enum ShipTactic
@@ -255,4 +266,12 @@ public enum AttackPhase
     Attacking,
     BackingOut,
     HitLanded
+}
+
+public enum EnemyType
+{
+    Military,
+    Civilian,
+    Cargo,
+    Fighter
 }

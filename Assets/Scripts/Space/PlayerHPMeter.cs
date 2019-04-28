@@ -26,11 +26,13 @@ public class PlayerGoldMeter : MonoBehaviour
         int hundreds = (int)(runtime.Gold % 1000 / 100);
         int thousands = (int)(runtime.Gold % 10000 / 1000);
         int tens_of_thousands = (int)(runtime.Gold % 100000 / 10000);
+        int hundreds_of_thousands = (int)(runtime.Gold % 1000000 / 100000);
 
         numbers[0].sprite = digits[ones];
         numbers[1].sprite = digits[tens];
         numbers[2].sprite = digits[hundreds];
         numbers[3].sprite = digits[thousands];
         numbers[4].sprite = digits[tens_of_thousands];
+        numbers[5].sprite = digits[hundreds_of_thousands];
     }
 }

@@ -186,6 +186,7 @@ MonoBehaviour:
   hpMeter: {fileID: 8532154161277477468}
   boardSign: {fileID: 4522727051135635286}
   dockingManager: {fileID: 0}
+  type: 2
 --- !u!114 &7026297056120067727
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -138,6 +138,14 @@ public class PlayerShip : MonoBehaviour
         }
         else
         {
+            if (playerShipRuntime.PlayerMaxY < playerShipRuntime.Position.y && vel.y > 0)
+            {
+                vel = new Vector2(vel.x, 0);
+            }
+            else if (playerShipRuntime.PlayerMinY > playerShipRuntime.Position.y && vel.y < 0)
+            {
+                vel = new Vector2(vel.x, 0);
+            }
             body.velocity = vel;
             spriteRenderer.flipX = dir < 0;
             engineEffects.ForEach(x => x.flipX = dir < 0);
@@ -154,12 +162,13 @@ public class PlayerShip : MonoBehaviour
 
     private void fire()
     {
-        if (lastFire + fireWait <= Time.time)
+        if (lastFire + fireWait <= Time.time && playerShipRuntime.Ammo > 0)
         {
             PlayerSpaceAmmo ammo = Instantiate(ammoPrefab);
             ammo.transform.position = transform.position + new Vector3(0.5f * dir, 0, 0);
             ammo.SetDir(dir);
             lastFire = Time.time;
+            playerShipRuntime.Ammo--;
         }
     }
 

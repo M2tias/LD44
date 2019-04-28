@@ -20,4 +20,11 @@ public class PlayerShipRuntime : ScriptableObject
     [SerializeField]
     private int hp;
     public int HP { get { return hp; } set { hp = value; } }
+
+    [SerializeField]
+    private int ammo;
+    public int Ammo { get { return ammo; } set { ammo = value; } }
+
+    public float PlayerMaxY { get { return 7.5f; } }
+    public float PlayerMinY { get { return -5f; } }
 }

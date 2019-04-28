@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2981383729804598441}
   - component: {fileID: 2981383729804598437}
   - component: {fileID: 2981383729804598438}
+  - component: {fileID: 1523106182}
   m_Layer: 8
   m_Name: PlayerShip
   m_TagString: Player
@@ -100,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
   body: {fileID: 2981383729804598437}
+  shipCollider: {fileID: 2981383729804598438}
   spriteRenderer: {fileID: 2981383729804598440}
   velocity: {x: 250, y: 150}
   ammoPrefab: {fileID: 2083126444336079932, guid: ccdedbdad211e0b4485636088c666acf,
@@ -110,6 +112,8 @@ MonoBehaviour:
   - {fileID: 2981383730075094549}
   fireWait: 0.16
   playerShipRuntime: {fileID: 11400000, guid: 8cad33c0c4c883b46a2a98dba4fc91a5, type: 2}
+  dockingManager: {fileID: 0}
+  shipAnimator: {fileID: 1523106182}
 --- !u!50 &2981383729804598437
 Rigidbody2D:
   serializedVersion: 4
@@ -147,6 +151,25 @@ CapsuleCollider2D:
   m_Offset: {x: 0.05, y: -0.09}
   m_Size: {x: 0.6, y: 0.3}
   m_Direction: 1
+--- !u!95 &1523106182
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2981383729804598442}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7f505e3ba3f40d2469d68bb057481fd1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2981383729860075827
 GameObject:
   m_ObjectHideFlags: 0

@@ -98,13 +98,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 2736538091478949553}
-  velocity: {x: 175, y: 125}
+  velocity: {x: 175, y: 175}
   dir: 1
   tactic: 0
   playerShipRuntime: {fileID: 11400000, guid: 8cad33c0c4c883b46a2a98dba4fc91a5, type: 2}
   hpMeter: {fileID: 3354371454465531540}
   boardSign: {fileID: 792833280447550795}
   dockingManager: {fileID: 0}
+  type: 0
 --- !u!114 &2736538091478949566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,7 +122,8 @@ MonoBehaviour:
   dir: 1
   front: {fileID: 2736538092290090446}
   back: {fileID: 2736538091550312647}
-  ammoPrefab: {fileID: 0}
+  ammoPrefab: {fileID: 3238396362946123094, guid: 2dd1009dbdf19df45ba66fde76710d78,
+    type: 3}
   fireWait: 0.33
   enemy: {fileID: 2736538091478949567}
 --- !u!1 &2736538091550312665
