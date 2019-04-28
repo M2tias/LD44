@@ -16,25 +16,49 @@ public class EnemyManager : MonoBehaviour
     public List<Enemy> Enemies { get { return enemies; } }
     [SerializeField]
     private DockingManager dockingManager;
-    private float shipCount = 1;
+    [SerializeField]
+    private EnemyWaveConfig enemyWaveConfig;
+    private float lastWaveStarted = 0f;
+    private int nextWaveId = 0;
+    [SerializeField]
+    private GameObject waveWarning;
+    private bool NoMoreWaves = false;
+    [SerializeField]
+    private PlayerShipRuntime playerShipRuntime;
 
 
     // Start is called before the first frame update
     void Start()
     {
         enemies = new List<Enemy>();
+        lastWaveStarted = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(shipCount > 0)
+        if (NoMoreWaves)
         {
-            Enemy militaryEnemy = instantiateEnemy(EnemyType.Military);
-            militaryEnemy.SetDockingManager(dockingManager);
-            Vector3 v = militaryEnemy.transform.position;
-            militaryEnemy.transform.position = new Vector3(v.x, -5, v.z);
-            shipCount--;
+            Debug.Log("Win soon!");
+            return;
+        }
+
+        Wave nextWave = enemyWaveConfig.Waves[nextWaveId];
+        float nextPrepTime = nextWave.prepTime;
+        if(Time.time >= nextPrepTime + lastWaveStarted)
+        {
+            Debug.Log("New wave!");
+            foreach(WaveEnemy we in nextWave.enemies)
+            {
+                Enemy enemy = instantiateEnemy(we.type);
+                enemy.SetDockingManager(dockingManager);
+                Vector2 pv = playerShipRuntime.Position;
+                enemy.transform.position = new Vector3(pv.x, pv.y, 0) + we.position;
+            }
+            lastWaveStarted = Time.time;
+            nextWaveId++;
+            NoMoreWaves = nextWaveId >= enemyWaveConfig.Waves.Count;
+            StartCoroutine(FlashWaveWarning());
         }
     }
 
@@ -60,5 +84,25 @@ public class EnemyManager : MonoBehaviour
 
         enemies.Add(enemy);
         return enemy;
+    }
+
+    IEnumerator FlashWaveWarning()
+    {
+        waveWarning.SetActive(true);
+        yield return new WaitForSeconds(0.33f);
+        waveWarning.SetActive(false);
+        yield return new WaitForSeconds(0.33f);
+        waveWarning.SetActive(true);
+        yield return new WaitForSeconds(0.33f);
+        waveWarning.SetActive(false);
+        yield return new WaitForSeconds(0.33f);
+        waveWarning.SetActive(true);
+        yield return new WaitForSeconds(0.33f);
+        waveWarning.SetActive(false);
+        yield return new WaitForSeconds(0.33f);
+        waveWarning.SetActive(true);
+        yield return new WaitForSeconds(0.33f);
+        waveWarning.SetActive(false);
+        yield return new WaitForSeconds(0.33f);
     }
 }

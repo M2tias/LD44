@@ -16,7 +16,7 @@ public class EnemyHPMeter : MonoBehaviour
     [SerializeField]
     private Sprite emptyShield;
 
-    private int HP = 0;
+    private float HP = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -43,7 +43,7 @@ public class EnemyHPMeter : MonoBehaviour
         }
     }
 
-    public void SetHealth(int hp)
+    public void SetHealth(float hp)
     {
         HP = hp;
     }

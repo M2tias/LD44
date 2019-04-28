@@ -7,11 +7,14 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private Rigidbody2D body;
     [SerializeField]
+    private Collider2D enemyCollider;
+    [SerializeField]
     private Vector2 velocity;
     [SerializeField]
     private int dir = 1;
     [SerializeField]
     private ShipTactic tactic = ShipTactic.Fleeing;
+    private ShipTactic previousTactic = ShipTactic.Fleeing;
     private AttackPhase attackPhase = AttackPhase.Attacking;
     [SerializeField]
     private PlayerShipRuntime playerShipRuntime;
@@ -23,6 +26,10 @@ public class Enemy : MonoBehaviour
     private DockingManager dockingManager;
     [SerializeField]
     private EnemyType type;
+    [SerializeField]
+    private Astronaut astronautPrefab;
+    [SerializeField]
+    private List<GameObject> explosionParts;
 
     //ShipTactic.Attacking
     private float attackChaseTime = 2.5f;
@@ -43,14 +50,24 @@ public class Enemy : MonoBehaviour
     private float fleeingMoveY = 1;
     private float fleeingMoveYCoef = 1.5f;
 
-    private int HP = 3;
+    [SerializeField]
+    private float HP = 3;
     private bool boardable = false;
     private bool doCollisionDamage = true;
+    private bool spawnedAstronaut = false;
+
+    private float lastHealed = 0f;
+    private float healFrequency = 10f;
+    private float healTillGood = 3f;
+
+    private float maxY { get { return 7.5f; } }
+    private float minY { get { return -5f; } }
 
     // Start is called before the first frame update
     void Start()
     {
         boardSign.SetActive(false);
+        enemyCollider = transform.GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -65,7 +82,7 @@ public class Enemy : MonoBehaviour
             {
                 shooting = true;
                 dir = transform.position.x > playerShipRuntime.Position.x ? -1 : 1;
-                if(HP == 1)
+                if(HP == 1 && type != EnemyType.Fighter)
                 {
                     tactic = ShipTactic.Fleeing;
                 }
@@ -187,6 +204,27 @@ public class Enemy : MonoBehaviour
                 dir = -1;
             }
 
+            //military ships heal on fleeing mode
+            if (type == EnemyType.Military)
+            {
+                if (lastHealed == 0)
+                {
+                    lastHealed = Time.time-5f;
+                }
+
+                if(Time.time > lastHealed + healFrequency)
+                {
+                    HP += 1;
+                    lastHealed = Time.time;
+                }
+
+                if(HP >= healTillGood)
+                {
+                    tactic = ShipTactic.Attacking;
+                    lastHealed = 0;
+                }
+            }
+
             moveY = fleeingMoveY;
             shooting = false;
         }
@@ -200,11 +238,104 @@ public class Enemy : MonoBehaviour
             hpMeter.gameObject.SetActive(false);
             boardSign.SetActive(true);
             dockingManager.SetDockable(this);
+            shooting = false;
+        }
+        else if(tactic == ShipTactic.Explode)
+        {
+            foreach(GameObject explObj in explosionParts)
+            {
+                explObj.SetActive(true);
+            }
+
+            foreach(Transform child in transform)
+            {
+                SpriteRenderer renderer = child.GetComponent<SpriteRenderer>();
+                if(renderer != null)
+                {
+                    renderer.enabled = false;
+                }
+            }
+
+            if(type == EnemyType.Civilian && !spawnedAstronaut)
+            {
+                spawnedAstronaut = true;
+                for(var i = 0; i < 3; i++)
+                {
+                    Astronaut astronaut = Instantiate(astronautPrefab);
+                    Vector3 v = Random.onUnitSphere;
+                    Vector3 v2 = Vector3.Normalize(new Vector3(v.x, v.y, 0));
+                    Vector2 x = new Vector2(v2.x, v2.y);
+                    astronaut.transform.position = transform.position;
+                    astronaut.SetDirection(x);
+                }
+            }
+
+            doCollisionDamage = false;
+            enemyCollider.enabled = false;
+            shooting = false;
+            hpMeter.gameObject.SetActive(false);
+            boardSign.SetActive(false);
+            moveX = 0;
+            moveY = 0;
+            StartCoroutine(WaitAndDestroy());
+        }
+        else if(tactic == ShipTactic.TooFar)
+        {
+            if(playerShipRuntime.Position.x >= transform.position.x)
+            {
+                dir = 1;
+            }
+            else
+            {
+                dir = -1;
+            }
+
+            if ((dir > 0 && playerShipRuntime.Position.x > transform.position.x) || (dir < 0 && playerShipRuntime.Position.x < transform.position.x))
+            {
+                if (Mathf.Abs(playerShipRuntime.Position.y - transform.position.y) < 1f && playerShipRuntime.Position.y >= transform.position.y)
+                {
+                    moveY = -1;
+                }
+                if (Mathf.Abs(playerShipRuntime.Position.y - transform.position.y) < 1f && playerShipRuntime.Position.y < transform.position.y)
+                {
+                    moveY = 1;
+                }
+            }
+
+            if(Mathf.Abs(playerShipRuntime.Position.x - transform.position.x) < 10)
+            {
+                tactic = previousTactic;
+            }
         }
 
         if(HP == 0)
         {
-            tactic = ShipTactic.Broken;
+            if (type == EnemyType.Cargo)
+            {
+                tactic = ShipTactic.Broken;
+            }
+            else
+            {
+                tactic = ShipTactic.Explode;
+            }
+        }
+
+        if(tactic != ShipTactic.Explode && tactic != ShipTactic.Broken && tactic != ShipTactic.TooFar)
+        {
+            if(Vector3.Distance(playerShipRuntime.Position, transform.position) > 40)
+            {
+                previousTactic = tactic;
+                tactic = ShipTactic.TooFar;
+            }
+        }
+
+        if(transform.position.y > maxY && moveY > 0)
+        {
+            moveY = 0;
+        }
+        else if(transform.position.y < minY && moveY < 0)
+        {
+            moveY = 0;
         }
 
         body.velocity = new Vector2(velocity.x * Time.deltaTime * dir * moveX, velocity.y * Time.deltaTime * moveY);
@@ -222,7 +353,7 @@ public class Enemy : MonoBehaviour
         return shooting;
     }
 
-    public void DoDamage(int damage)
+    public void DoDamage(float damage)
     {
         HP -= damage;
     }
@@ -239,7 +370,7 @@ public class Enemy : MonoBehaviour
 
     public Vector3 GetDockingPosition()
     {
-        return boardSign.transform.position;
+        return boardSign.transform.position + Vector3.down * 0.2f;
     }
 
     public void SetDockingManager(DockingManager manager)
@@ -251,6 +382,23 @@ public class Enemy : MonoBehaviour
     {
         return type;
     }
+
+    IEnumerator WaitAndStartExplosion()
+    {
+        yield return new WaitForSeconds(3);
+        tactic = ShipTactic.Explode;
+    }
+
+    IEnumerator WaitAndDestroy()
+    {
+        yield return new WaitForSeconds(5);
+        Destroy(gameObject);
+    }
+
+    public void StopDock()
+    {
+        StartCoroutine(WaitAndStartExplosion());
+    }
 }
 
 public enum ShipTactic
@@ -258,7 +406,9 @@ public enum ShipTactic
     Attacking,
     PassingThrough,
     Fleeing,
-    Broken
+    Broken,
+    Explode,
+    TooFar
 }
 
 public enum AttackPhase

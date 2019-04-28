@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RadarManager : MonoBehaviour
@@ -51,8 +52,18 @@ public class RadarManager : MonoBehaviour
         drawPlayerMarker();
         List<Enemy> enemies = enemyManager.Enemies;
 
+        for(int i = enemies.Count-1; i >= 0; i--)
+        {
+            if (enemies[i] == null)
+            {
+                enemies.RemoveAt(i);
+                continue;
+            }
+        }
+
         foreach (Enemy enemy in enemies)
         {
+
             if (!instantiatedBigIcons.ContainsKey(enemy))
             {
 
@@ -86,7 +97,7 @@ public class RadarManager : MonoBehaviour
             iconBig.transform.localPosition = new Vector3(enemyRadarPosX, enemyRadarPosY, 0);
             iconSmall.transform.localPosition = new Vector3(enemyRadarPosX, enemyRadarPosY, 0);
 
-            if(enemyPercentage > 0.6)
+            if (enemyPercentage > 0.6)
             {
                 iconBig.SetActive(false);
                 iconSmall.SetActive(true);
@@ -97,23 +108,29 @@ public class RadarManager : MonoBehaviour
                 iconSmall.SetActive(false);
             }
         }
+
+        List<GameObject> deleted = instantiatedBigIcons.Where(x => x.Key == null).Select(x => x.Value).ToList();
+        for (int i = deleted.Count - 1; i >= 0; i--)
+        {
+            Destroy(deleted[i]);
+        }
     }
 
     private GameObject getBigPrefab(EnemyType type)
     {
-        if(type == EnemyType.Cargo)
+        if (type == EnemyType.Cargo)
         {
             return cargoBigRadarIconPrefab;
         }
-        else if(type == EnemyType.Civilian)
+        else if (type == EnemyType.Civilian)
         {
             return civilianBigRadarIconPrefab;
         }
-        else if(type == EnemyType.Fighter)
+        else if (type == EnemyType.Fighter)
         {
             return fighterBigRadarIconPrefab;
         }
-        else if(type == EnemyType.Military)
+        else if (type == EnemyType.Military)
         {
             return militaryBigRadarIconPrefab;
         }
@@ -167,7 +184,7 @@ public class RadarManager : MonoBehaviour
         float entityPercentage = entityHeight / entityRange;
         float entityRadarHeight = entityPercentage * radarRange;
 
-        if(accountForX)
+        if (accountForX)
         {
             float newHeight = entityRadarHeight - Mathf.Sqrt(1200 - 0.15f * xPos * xPos) * 0.23f + 14;
             if (float.IsNaN(newHeight))

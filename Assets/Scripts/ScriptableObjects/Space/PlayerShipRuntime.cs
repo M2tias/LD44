@@ -18,8 +18,8 @@ public class PlayerShipRuntime : ScriptableObject
     public int Gold { get { return gold; } set { gold = value; } }
 
     [SerializeField]
-    private int hp;
-    public int HP { get { return hp; } set { hp = value; } }
+    private float hp;
+    public float HP { get { return hp; } set { hp = value; } }
 
     [SerializeField]
     private int ammo;

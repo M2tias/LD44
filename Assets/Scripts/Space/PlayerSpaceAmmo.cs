@@ -12,12 +12,12 @@ public class PlayerSpaceAmmo : MonoBehaviour
     [SerializeField]
     private float speed = 300f;
     [SerializeField]
-    private int damage = 1;
+    private float damage = 1;
     [SerializeField]
     private bool playerAmmo = false;
 
     private int dir = 1;
-    private float lifeTime = 50f;
+    private float lifeTime = 5f;
     private float created = 0f;
 
     // Start is called before the first frame update
@@ -31,9 +31,9 @@ public class PlayerSpaceAmmo : MonoBehaviour
     {
         body.velocity = new Vector2(speed * Time.deltaTime * dir, 0);
         spriteRenderer.flipX = dir < 0;
-        if (created + lifeTime > Time.time)
+        if (created + lifeTime < Time.time)
         {
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 

@@ -26,7 +26,7 @@ public class PlayerAmmoMeter : MonoBehaviour
         for (int i = 0; i < ammo.Count; i++)
         {
 
-            if (i < runtime.HP)
+            if (i < runtime.Ammo)
             {
                 ammo[i].sprite = full;
             }

@@ -28,6 +28,14 @@ public class DockingManager : MonoBehaviour
 
     public List<Enemy> GetDockableEnemies()
     {
+        for(int i = dockableEnemies.Count - 1; i >= 0; i--)
+        {
+            if (dockableEnemies[i] == null)
+            {
+                dockableEnemies.RemoveAt(i);
+            }
+        }
+
         return dockableEnemies;
     }
 }

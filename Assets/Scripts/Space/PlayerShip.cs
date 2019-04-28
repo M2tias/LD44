@@ -26,12 +26,16 @@ public class PlayerShip : MonoBehaviour
     private DockingManager dockingManager;
     [SerializeField]
     private Animator shipAnimator;
+    [SerializeField]
+    private Astronaut astronautPrefab;
+
     private bool dockingOngoing = false;
     private Vector3 dockingPosition;
     private Vector3 dockingStart;
     private float dockingStartTime = 0f;
     private float dockingTime = 0f;
     private float dockingDistance = 0f;
+    private Enemy dockTarget;
 
     //invuln
     private float invul_started = 0f;
@@ -51,7 +55,8 @@ public class PlayerShip : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerShipRuntime.HP = 5;
+        playerShipRuntime.HP = 10;
+        playerShipRuntime.Ammo = 45;
         shaderFlash = Shader.Find("GUI/Text Shader");
         shaderSpritesDefault = Shader.Find("Sprites/Default");
     }
@@ -110,12 +115,14 @@ public class PlayerShip : MonoBehaviour
 
             if(closest != null)
             {
+                dockingManager.GetDockableEnemies().Remove(closest);
                 dockingPosition = closest.GetDockingPosition();
                 dockingDistance = minD;
                 dockingStartTime = Time.time;
                 dockingTime = dockingDistance / 3;
                 dockingOngoing = true;
                 dockingStart = transform.position;
+                dockTarget = closest;
             }
         }
 
@@ -131,8 +138,10 @@ public class PlayerShip : MonoBehaviour
             Vector3 newPos = Vector3.Lerp(dockingStart, dockingPosition, lerpCoef);
             invul_started = Time.time;
             transform.position = newPos;
+            mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
             if (lerpCoef > 0.98f)
             {
+                engineEffects.ForEach(x => x.enabled = false);
                 shipAnimator.Play("ShipDock");
             }
         }
@@ -146,6 +155,13 @@ public class PlayerShip : MonoBehaviour
             {
                 vel = new Vector2(vel.x, 0);
             }
+
+            if(shipCollider.enabled == false)
+            {
+                shipCollider.enabled = true;
+            }
+
+            engineEffects.ForEach(x => x.enabled = vel.x != 0 || vel.y != 0);
             body.velocity = vel;
             spriteRenderer.flipX = dir < 0;
             engineEffects.ForEach(x => x.flipX = dir < 0);
@@ -154,9 +170,14 @@ public class PlayerShip : MonoBehaviour
             mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
         }
 
-        if (playerShipRuntime.HP > 5)
+        if (playerShipRuntime.HP > 10)
         {
-            playerShipRuntime.HP = 5;
+            playerShipRuntime.HP = 10;
+        }
+
+        if (playerShipRuntime.Ammo > 45)
+        {
+            playerShipRuntime.HP = 45;
         }
     }
 
@@ -172,7 +193,7 @@ public class PlayerShip : MonoBehaviour
         }
     }
 
-    public void DoDamage(int damage)
+    public void DoDamage(float damage)
     {
         if (!playerShipRuntime.Invulnerable)
         {
@@ -243,5 +264,28 @@ public class PlayerShip : MonoBehaviour
     {
         spriteRenderer.material.shader = shaderSpritesDefault;
         spriteRenderer.color = Color.white;
+    }
+
+    public void AddGold()
+    {
+        playerShipRuntime.Gold += 243;
+    }
+
+    public void StopDocking()
+    {
+        dockingOngoing = false;
+        transform.position = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
+        if (dockTarget != null)
+        {
+            dockTarget.StopDock();
+        }
+        shipAnimator.Play("ShipIdle");
+
+    }
+
+    public void AddHPandAmmo()
+    {
+        playerShipRuntime.HP += 0.67f;
+        playerShipRuntime.Ammo += 6;
     }
 }

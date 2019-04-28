@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3238396362946123094}
   - component: {fileID: 3238396362946123095}
   - component: {fileID: 3238396362946123113}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: EnemyAmmo
   m_TagString: EnemyAmmo
   m_Icon: {fileID: 0}
@@ -97,8 +97,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 3238396362946123113}
   spriteRenderer: {fileID: 3238396362946123093}
-  speed: 300
+  speed: 400
   damage: 1
+  playerAmmo: 0
 --- !u!61 &3238396362946123095
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -109,7 +110,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.05, y: 0.01}

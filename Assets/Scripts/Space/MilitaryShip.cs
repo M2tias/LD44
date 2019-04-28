@@ -24,25 +24,41 @@ public class MilitaryShip : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         dir = enemy.GetDir();
-        front.flipX = dir < 1;
-        back.flipX = dir < 1;
+        if (enemy.GetEnemyType() == EnemyType.Military)
+        {
+            front.flipX = dir < 1;
+            back.flipX = dir < 1;
 
-        if(dir > 0)
-        {
-            front.transform.localPosition = new Vector3(1, 0, 0);
-            back.transform.localPosition = new Vector3(0, 0, 0);
+            if (dir > 0)
+            {
+                front.transform.localPosition = new Vector3(1, 0, 0);
+                back.transform.localPosition = new Vector3(0, 0, 0);
+            }
+            else
+            {
+                front.transform.localPosition = new Vector3(0, 0, 0);
+                back.transform.localPosition = new Vector3(1, 0, 0);
+            }
         }
-        else
+        else if (enemy.GetEnemyType() == EnemyType.Fighter)
         {
-            front.transform.localPosition = new Vector3(0, 0, 0);
-            back.transform.localPosition = new Vector3(1, 0, 0);
+            back.flipX = dir < 1;
+
+            if (dir > 0)
+            {
+                back.transform.localPosition = new Vector3(0, 0, 0);
+            }
+            else
+            {
+                back.transform.localPosition = new Vector3(1, 0, 0);
+            }
         }
 
         if (enemy.GetShooting() && lastFire + fireWait <= Time.time)
