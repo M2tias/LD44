@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using TiledSharp;
+//using TiledSharp;
 using UnityEngine;
 
 public class TilemapManager : MonoBehaviour
@@ -34,7 +34,7 @@ public class TilemapManager : MonoBehaviour
 
     public void LoadLevel(string level, string tilesetRef)
     {
-        XDocument doc = XDocument.Parse(level);
+        /*XDocument doc = XDocument.Parse(level);
         XDocument tilesetDoc = XDocument.Parse(tilesetRef);
         TmxMap map = new TmxMap(doc);
         map.AddTilesetsAsXContainers(tilesetDoc.Elements("tileset").ToList());
@@ -62,7 +62,7 @@ public class TilemapManager : MonoBehaviour
 
             }
         }
-        levelLoaded = true;
+        levelLoaded = true;*/
     }
 
 }

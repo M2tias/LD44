@@ -14,6 +14,8 @@ public class Astronaut : MonoBehaviour
 
     private float lifeTime = 60f;
     private float created = 0f;
+    private float maxY { get { return 7.5f; } }
+    private float minY { get { return -5f; } }
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,17 @@ public class Astronaut : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        v = transform.position;
+
+        if (v.y > maxY)
+        {
+            transform.position = new Vector3(v.x, maxY, v.z);
+        }
+        else if (v.y < minY)
+        {
+            transform.position = new Vector3(v.x, minY, v.z);
+        }
     }
 
     public void SetDirection(Vector3 d)
@@ -48,7 +61,7 @@ public class Astronaut : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             PlayerShip ship = collision.gameObject.GetComponent<PlayerShip>();
-            if(ship != null)
+            if (ship != null)
             {
                 ship.AddGold();
                 Destroy(gameObject);

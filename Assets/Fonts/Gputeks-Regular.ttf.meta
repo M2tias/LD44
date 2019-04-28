@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 807ad7418620cbb459263eb48d1bf9da
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Gputeks
+  fontNames:
+  - Gputeks
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 3e8bf132da7847b4191db8639fd59476, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

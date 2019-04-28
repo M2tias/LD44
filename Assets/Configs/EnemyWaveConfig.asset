@@ -69,3 +69,39 @@ MonoBehaviour:
       type: 0
     - position: {x: -5, y: 0, z: 0}
       type: 2
+  - prepTime: 30
+    enemies:
+    - position: {x: -10, y: 0, z: 0}
+      type: 1
+    - position: {x: -5, y: 0, z: 0}
+      type: 2
+  - prepTime: 15
+    enemies:
+    - position: {x: -10, y: 0, z: 0}
+      type: 1
+    - position: {x: -5, y: 0, z: 0}
+      type: 2
+  - prepTime: 35
+    enemies:
+    - position: {x: -10, y: 1, z: 0}
+      type: 3
+    - position: {x: -10, y: 0, z: 0}
+      type: 0
+    - position: {x: -10, y: -1, z: 0}
+      type: 3
+    - position: {x: 10, y: 1, z: 0}
+      type: 3
+    - position: {x: 10, y: 0, z: 0}
+      type: 0
+    - position: {x: 10, y: -1, z: 0}
+      type: 3
+  - prepTime: 15
+    enemies:
+    - position: {x: 5, y: 1, z: 0}
+      type: 2
+    - position: {x: -5, y: 0, z: 0}
+      type: 1
+    - position: {x: 5, y: 1, z: 0}
+      type: 1
+    - position: {x: -5, y: 0, z: 0}
+      type: 2

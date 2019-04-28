@@ -25,6 +25,8 @@ public class EnemyManager : MonoBehaviour
     private bool NoMoreWaves = false;
     [SerializeField]
     private PlayerShipRuntime playerShipRuntime;
+    [SerializeField]
+    private UIManager uiManager;
 
 
     // Start is called before the first frame update
@@ -39,6 +41,11 @@ public class EnemyManager : MonoBehaviour
     {
         if (NoMoreWaves)
         {
+            if (enemies.Count == 0 && NoMoreWaves)
+            {
+                uiManager.PartialWin();
+            }
+
             Debug.Log("Win soon!");
             return;
         }
@@ -54,6 +61,7 @@ public class EnemyManager : MonoBehaviour
                 enemy.SetDockingManager(dockingManager);
                 Vector2 pv = playerShipRuntime.Position;
                 enemy.transform.position = new Vector3(pv.x, pv.y, 0) + we.position;
+                enemies.Add(enemy);
             }
             lastWaveStarted = Time.time;
             nextWaveId++;

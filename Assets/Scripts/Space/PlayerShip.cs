@@ -28,6 +28,8 @@ public class PlayerShip : MonoBehaviour
     private Animator shipAnimator;
     [SerializeField]
     private Astronaut astronautPrefab;
+    [SerializeField]
+    private UIManager uiManager;
 
     private bool dockingOngoing = false;
     private Vector3 dockingPosition;
@@ -57,6 +59,7 @@ public class PlayerShip : MonoBehaviour
     {
         playerShipRuntime.HP = 10;
         playerShipRuntime.Ammo = 45;
+        playerShipRuntime.Gold = 0;
         shaderFlash = Shader.Find("GUI/Text Shader");
         shaderSpritesDefault = Shader.Find("Sprites/Default");
     }
@@ -67,11 +70,11 @@ public class PlayerShip : MonoBehaviour
         Vector2 vel = body.velocity;
         doInvuln();
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             vel = new Vector2(vel.x, velocity.y * Time.deltaTime);
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             vel = new Vector2(vel.x, -velocity.y * Time.deltaTime);
         }
@@ -80,12 +83,12 @@ public class PlayerShip : MonoBehaviour
             vel = new Vector2(vel.x, 0);
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             vel = new Vector2(velocity.x * Time.deltaTime, vel.y);
             dir = 1;
         }
-        else if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
             vel = new Vector2(-velocity.x * Time.deltaTime, vel.y);
             dir = -1;
@@ -95,11 +98,11 @@ public class PlayerShip : MonoBehaviour
             vel = new Vector2(0, vel.y);
         }
 
-        if (Input.GetKey(KeyCode.H))
+        if (Input.GetKey(KeyCode.H) || Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.Space))
         {
             fire();
         }
-        else if(Input.GetKey(KeyCode.J) && !dockingOngoing)
+        else if((Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.Return)) && !dockingOngoing)
         {
             Enemy closest = null;
             float minD = 100000f;
@@ -178,6 +181,21 @@ public class PlayerShip : MonoBehaviour
         if (playerShipRuntime.Ammo > 45)
         {
             playerShipRuntime.HP = 45;
+        }
+
+        if(playerShipRuntime.HP <= 0)
+        {
+            uiManager.Lost("Your ship was destroyed and you died in the vast cold space.");
+        }
+
+        if(playerShipRuntime.Gold >= 10000)
+        {
+            uiManager.Win();
+        }
+
+        if(dockingManager.GetDockableEnemies().Count <= 0 && playerShipRuntime.Ammo == 0)
+        {
+            uiManager.Lost("You ran out of ammo. You are not able to fullfil your mission.");
         }
     }
 
@@ -268,7 +286,7 @@ public class PlayerShip : MonoBehaviour
 
     public void AddGold()
     {
-        playerShipRuntime.Gold += 243;
+        playerShipRuntime.Gold += 750;
     }
 
     public void StopDocking()
